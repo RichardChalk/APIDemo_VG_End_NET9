@@ -11,6 +11,7 @@ namespace SuperHeroAPIDemo_G_NET9
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddControllers().AddNewtonsoftJson();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

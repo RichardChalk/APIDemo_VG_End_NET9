@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperHeroAPIDemo_G_NET9.Data;
@@ -101,8 +102,24 @@ namespace SuperHeroAPIDemo_G_NET9.Controllers
 
         }
 
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<ActionResult<SuperHero>>
+        PatchHero(JsonPatchDocument hero, int id)
+        {
+            // OBS: PATCH Uppdaterar SuperHero (VISSA properties)
+            var heroToUpdate = await
+                _dbContext.SuperHeroes.FindAsync(id);
 
+            if (heroToUpdate == null)
+            {
+                return BadRequest("Superhero not found");
+            }
 
+            hero.ApplyTo(heroToUpdate);
+            await _dbContext.SaveChangesAsync();
 
+            return Ok(await _dbContext.SuperHeroes.ToListAsync());
+        }
     }
 }
